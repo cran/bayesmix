@@ -117,6 +117,9 @@ plot.BMMposteriori <- function(x, caption, main = "", ...) {
   }
 }
 
+# Plot method for jags objects adapted from plot.mcmc in package coda
+# written by Martyn Plummer, Nicky Best, Kate Cowles, Karen Vines
+
 "plot.jags" <-
 function (x, variables = NULL, trace = TRUE, density = TRUE, 
                        smooth = TRUE, bwf, num, xlim, auto.layout = TRUE, ask = interactive(), ...)  
@@ -137,13 +140,13 @@ function (x, variables = NULL, trace = TRUE, density = TRUE,
         oldpar <- NULL
         on.exit(par(oldpar))
         if (auto.layout) {
-          mfrow <- set.mfrow(Nchains = nchain(u), Nparms = nvar(u), 
-                             nplots = trace + density)
+          mfrow <- coda:::set.mfrow(Nchains = nchain(u), Nparms = nvar(u), 
+                                    nplots = trace + density)
           oldpar <- par(mfrow = mfrow)
         }
         oldpar <- c(oldpar, par(ask = ask))
         for (i in 1:nvar(u)) {
-          y <- as.matrix(u)[, i, drop = FALSE]
+          y <- mcmc(as.matrix(u)[, i, drop = FALSE], start(u), end(u), thin(u))
           if (trace) 
             traceplot(y, smooth = smooth)
           if (density) {

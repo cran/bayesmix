@@ -1,0 +1,5 @@
+Changes in bayesmix version 0.5-3
+
+  o Patch from Marty Plummer for jags-0.75 and coda-0.9-1
+
+First version released on CRAN: 0.5-2

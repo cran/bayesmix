@@ -21,9 +21,9 @@
   exit <- JAGScall(prefix, jags)
   results <- JAGSread(exit)
   if (any(!is.finite(results$results))) {
-    warning("Infinite values occured: These draws are omitted!")
-    results$results <- as.mcmc(na.omit(results$results))
-    if (dim(results$results)[1] == 0) results$results <- NULL
+    warning("Infinite values occured: These draws are omitted!") 
+    results$results <- na.omit(results$results)
+    if (dim(results$results)[1] == 0) results$results <- NULL else results$results <- as(results$results, "mcmc")
   }
   if (!exit) {
     if (cleanup) {
@@ -37,33 +37,9 @@
   z
 }
 
-"summaryShort.mcmc" <-
-function (object, quantiles = c(0.025, 0.975), 
-    ...) 
-{
-    x <- as.mcmc(object)
-    statnames <- c("Mean", "SD")
-    varstats <- matrix(nrow = nvar(x), ncol = length(statnames), 
-        dimnames = list(varnames(x), statnames))
-    if (is.matrix(x)) {
-        xmean <- apply(x, 2, mean)
-        xvar <- apply(x, 2, var)
-        varquant <- t(apply(x, 2, quantile, quantiles))
-    }
-    else {
-        xmean <- mean(x, na.rm = TRUE)
-        xvar <- var(x, na.rm = TRUE)
-        varquant <- quantile(x, quantiles)
-    }
-    varstats[, 1] <- xmean
-    varstats[, 2] <- sqrt(xvar)
-    varstats <- drop(varstats)
-    varquant <- drop(varquant)
-    out <- list(statistics = varstats, quantiles = varquant,
-        start = start(x), end = end(x), thin = thin(x), nchain = 1)
-    class(out) <- "summaryShort.mcmc"
-    return(out)
-}
+# Print method for jags objects adapted from print.mcmc and
+# summary.mcmc in package coda written by Martyn Plummer, Nicky Best,
+# Kate Cowles, Karen Vines
 
 "print.jags" <-
 function(x, ...) {
@@ -85,6 +61,35 @@ function(x, ...) {
       }
     }
   }
+}
+
+
+"summaryShort.mcmc" <-
+function (object, quantiles = c(0.025, 0.975), 
+    ...) 
+{
+    x <- as(object, "mcmc")
+    statnames <- c("Mean", "SD")
+    varstats <- matrix(nrow = nvar(x), ncol = length(statnames), 
+        dimnames = list(varnames(x), statnames))
+    if (is.matrix(x)) {
+        xmean <- apply(x, 2, mean)
+        xvar <- apply(x, 2, var)
+        varquant <- t(apply(x, 2, quantile, quantiles))
+    }
+    else {
+        xmean <- mean(x, na.rm = TRUE)
+        xvar <- var(x, na.rm = TRUE)
+        varquant <- quantile(x, quantiles)
+    }
+    varstats[, 1] <- xmean
+    varstats[, 2] <- sqrt(xvar)
+    varstats <- drop(varstats)
+    varquant <- drop(varquant)
+    out <- list(statistics = varstats, quantiles = varquant,
+        start = start(x), end = end(x), thin = thin(x), nchain = 1)
+    class(out) <- "summaryShort.mcmc"
+    return(out)
 }
 
 "print.summaryShort.mcmc" <-

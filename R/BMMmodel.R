@@ -40,7 +40,6 @@ function(y, k, priors, inits = "initsFS", aprioriWeights = 1, no.empty.classes =
                list(seg = diag(k)),
                var)
       const <- c(const, list(Itot = rep(1, k)))
-      model$inits$seg = diag(k)
     }
     varlist <- varSpec(c(const, var))
     
@@ -62,11 +61,15 @@ function(y, k, priors, inits = "initsFS", aprioriWeights = 1, no.empty.classes =
                     "\t\tS[i] ~ dcat(eta[]);\n\t}\n", sep = "")
     }
     bugs <- paste(bugs, modelPriors(priors, restrict), sep = "")
-    if (no.empty.classes) bugs <- paste(bugs, "\tfor (i in 1:N) {\n\t\tind[i,] <- seg[S[i],];\n\t}\n",
-                                        "\tfor (j in 1:k){\n\t\ttot[j] <- sum(ind[,j]);\n",
-                                        "\t\tItot[j] ~ dinterval(tot[j], 0);\n\t}\n", sep = "")
-    bugs <- paste(bugs,paste("\teta[] ~ ddirch(e[]);\n}\n"), sep = "")
     model$data <- c(const, list(e = e), list(y = y))
+
+    if (no.empty.classes) {
+      bugs <- paste(bugs, "\tfor (i in 1:N) {\n\t\tind[i,] <- seg[S[i],];\n\t}\n",
+                    "\tfor (j in 1:k){\n\t\ttot[j] <- sum(ind[,j]);\n",
+                    "\t\tItot[j] ~ dinterval(tot[j], 0);\n\t}\n", sep = "")
+      model$data$seg <- diag(k)
+    }
+    bugs <- paste(bugs,paste("\teta[] ~ ddirch(e[]);\n}\n"), sep = "")
     if (length(priors$name) > 1) {
       if (priors$name[2] == "tau") {
         if(!all(c(model$data$g0G0Half,model$data$g0Half)) & !("S0" %in% names(model$inits)))
