@@ -1,0 +1,8 @@
+export(JAGSrun, JAGSsetup, JAGSsetup.BMMsetup, JAGScall, JAGSread, BMMmodel, JAGScontrol,
+BMMpriors, BMMposteriori, plot.BMMposteriori, plot.jags, Sort, haveJAGS,
+randomPermutation, BMMdiag, print.jags, print.JAGSmodel,
+print.JAGScontrol, initsFS, priorsFish,
+priorsRaftery, priorsUncertain)  
+
+# methods which are documented but not exported
+# export()
