@@ -1,8 +1,10 @@
-export(JAGSrun, JAGSsetup, JAGSsetup.BMMsetup, JAGScall, JAGSread, BMMmodel, JAGScontrol,
-BMMpriors, BMMposteriori, plot.BMMposteriori, plot.jags, Sort, haveJAGS,
-randomPermutation, BMMdiag, print.jags, print.JAGSmodel,
-print.JAGScontrol, initsFS, priorsFish,
-priorsRaftery, priorsUncertain)  
+export(JAGSrun, JAGSsetup, JAGScall, JAGSread, BMMmodel, JAGScontrol,
+       BMMpriors, BMMposteriori, Sort, haveJAGS, randomPermutation, BMMdiag, 
+       initsFS, priorsFish, priorsRaftery, priorsUncertain)
 
-# methods which are documented but not exported
-# export()
+S3method("plot", "jags")
+S3method("plot", "BMMposteriori")
+
+S3method("print", "jags")
+S3method("print", "JAGSmodel")
+S3method("print", "JAGScontrol")

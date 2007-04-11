@@ -21,7 +21,7 @@
   exit <- JAGScall(prefix, jags)
   results <- JAGSread(exit)
   if (any(!is.finite(results$results))) {
-    warning("Infinite values occured: These draws are omitted!") 
+    warning("Infinite values occured: These draws are omitted!")
     results$results <- na.omit(results$results)
     if (dim(results$results)[1] == 0) results$results <- NULL else results$results <- as(results$results, "mcmc")
   }

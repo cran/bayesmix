@@ -5,3 +5,4 @@
   if (file.exists(jags)) options(jags.exe = jags)
 }
 
+

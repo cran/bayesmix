@@ -1,3 +1,7 @@
+Changes in bayesmix version 0.5-5
+
+  o Dumping the data modified due to changes in R
+
 Changes in bayesmix version 0.5-3
 
   o Patch from Marty Plummer for jags-0.75 and coda-0.9-1
