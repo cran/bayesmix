@@ -6,13 +6,14 @@
 \description{Given the data values for the priors are determined.
 }
 \usage{
-priorsFish(y)
+priorsFish(y, eps = 10^-16)
 priorsRaftery(y)
-priorsUncertain(y)
+priorsUncertain(y, eps = 10^-16)
 
 }
 \arguments{
   \item{y}{a numeric vector.}
+  \item{eps}{a numeric value indicating the smallest value for flat priors.}
 }
 \details{Values for the prior parameter \code{b0}, \code{B0}, \code{nu0}
   and \code{S0} are determined.

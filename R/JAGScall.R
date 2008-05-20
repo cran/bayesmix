@@ -2,34 +2,19 @@ JAGSsetup <- function(model, y, prefix, control, ...) {
   UseMethod("JAGSsetup")
 }
 
-.Dump <- function(data, file) {
-  names(data) <- sapply(names(data), function(x) paste("\"", x, "\"", sep=""))
-  with(data, dump(names(data), file = file, control = list("quoteExpressions", "showAttributes", "useSource", "warnIncomplete")))
-  ## in R 2.6 c(1,2) is dumped as 1:2
-  data <- readLines(file)
-  if (length(grep(":", data))) {
-    for (i in  grep(":", data)) {
-      Data <- strsplit(data[i], "")[[1]]
-      where <- grep(":", Data)
-      data[i] <- paste(c(Data[1:(where-2)],
-                         paste("c(", paste(eval(parse(text = paste(Data[where + c(-1:1)], collapse = ""))), collapse = ", "), ")", sep = ""),
-                         Data[(where+2):length(Data)]), collapse = "")
-    }
-    writeLines(data, con = file)
-  }
-}
-
 JAGSsetup.default <- function(model, y, prefix, control, ...) {
   if (!inherits(model, "JAGSmodel")) stop("Only for use with 'JAGSmodel' objects!")
-  .Dump(model$data, file = paste(prefix, "-data.R", sep = ""))
+  with(model$data, dump(names(model$data), file = paste(prefix, "-data.R", sep = "")))
   if (!is.null(control$RNG)) model$inits <- c(model$inits, control$RNG)
-  .Dump(model$inits, file = paste(prefix, "-inits.R", sep = ""))
-  if (length(model$bugs) > 1) 
+  with(model$inits, dump(names(model$inits), file = paste(prefix, "-inits.R", sep = "")))
+  if (length(model$bugs) > 1) {
     model$bugs <- .collapse(model$bugs, prefix)
+  }
   write(model$bugs, file = paste(prefix,".bug", sep = ""))
   if (!any(names(control) %in% "text")) stop("control not specified correctly!")
-  if (length(control$text) > 1)
+  if (length(control$text) > 1) {
     control$text <- .collapse(control$text, prefix)
+  }
   write(control$text, file = paste(prefix, ".cmd", sep = ""))
   return(list(control = control, model = model))
 }
@@ -58,15 +43,15 @@ JAGScall <- function(prefix, jags, quiet = FALSE) {
   if (.Platform$OS.type == "windows") exit <- system(paste(jags, " ", prefix,".cmd", sep = ""))
   else  exit <- system(paste(jags, "< ",prefix,".cmd > /dev/null", sep = ""), ignore.stderr = quiet)
   if (exit) stop("System call not successfull")
-  if (file.info("jags.out")[1] == 0) exit <- 1
+  if (file.info("CODAchain1.txt")[1] == 0) exit <- 1
   exit
 }
 
 JAGSread <- function(exit, transform = TRUE) {
   if (!exit) {
-    if(!all(paste("jags" ,c("out", "ind"), sep = ".") %in% list.files()))
-      stop("Cannot read jags output: .out or .ind file is missing!")
-    results <- read.jags(quiet = TRUE)
+    if(!all(paste("CODA" ,c("index", "chain1"), ".txt", sep = "") %in% list.files()))
+      stop("Cannot read jags output: CODAindex.txt or CODAchain1.txt file is missing!")
+    results <- read.openbugs(quiet = TRUE)[[1]]
     index <- grep("tau", colnames(results))
     variables <- unique(sapply(colnames(results), function(x) strsplit(x, "\\[")[[1]][1]))
     if (transform & length(index) > 0) {

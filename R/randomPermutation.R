@@ -1,4 +1,4 @@
-"randomPermutation" <- function(x) {
+randomPermutation <- function(x) {
   if (!(inherits(x, "jags") && inherits(x$model, "BMMmodel"))) 
     stop("Use only with 'jags' objects with model of class 'BMMmodel'.")
   k <- x$model$data$k

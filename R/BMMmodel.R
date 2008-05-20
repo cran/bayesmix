@@ -1,4 +1,4 @@
-"BMMmodel" <-
+BMMmodel <-
 function(y, k, priors, inits = "initsFS", aprioriWeights = 1, no.empty.classes = FALSE, restrict = "none", ...) {
   if (missing(y)) {
     call <- match.call(expand.dots = TRUE)
@@ -72,7 +72,7 @@ function(y, k, priors, inits = "initsFS", aprioriWeights = 1, no.empty.classes =
     bugs <- paste(bugs,paste("\teta[] ~ ddirch(e[]);\n}\n"), sep = "")
     if (length(priors$name) > 1) {
       if (priors$name[2] == "tau") {
-        if(!all(c(model$data$g0G0Half,model$data$g0Half)) & !("S0" %in% names(model$inits)))
+        if(!all(c(model$data$g0G0Half,model$data$g0Half) > 0) & !("S0" %in% names(model$inits)))
           stop("Priors not specified correctly: Need an initial value for S0 with improper hierarchical prior.")
       }
       else stop("Should not be possible to have an hierarchical prior other than tau")
@@ -84,7 +84,7 @@ function(y, k, priors, inits = "initsFS", aprioriWeights = 1, no.empty.classes =
   model
 }
 
-"modelParameters" <-
+modelParameters <-
 function(priors) {
   parlist <- NULL
   for (i in names(priors$var)) {
@@ -100,8 +100,9 @@ function(priors) {
   parlist
 }
 
-"modelPriors" <-
+modelPriors <-
 function(priors, restrict) {
+  mu <- b0 <- B0inv <- B <- tau <- nu0Half <- nu0S0Half <- S0 <- g0Half <- g0G0Half <- numeric(0)
   variants <- c("independence", "condconjugate")
   variant <- match.arg(tolower(priors$name[1]), variants)
   var <- c(priors$var, priors$inits)
@@ -133,7 +134,7 @@ function(priors, restrict) {
   priorsSpec
 }
 
-"varSpec" <-
+varSpec <-
 function(var)  {
   varlist = NULL
   for (i in names(var)) {

@@ -17,7 +17,7 @@
 }
 \source{
   Abraham, B. and G. Box (1978)
-  Linear models and spourious observations.
+  Linear models and spurious observations.
   \emph{Applied Statistics}, \bold{27}, 131--8.  
 }
 \examples{

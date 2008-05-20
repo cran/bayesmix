@@ -6,12 +6,13 @@
   of a \code{BMMmodel}.
 }
 \usage{
-BMMpriors(specification, y)
+BMMpriors(specification, y, eps = 10^-16)
 }
 \arguments{
   \item{specification}{named list including \code{kind}, \code{parameter},
     \code{hierarchical} and \code{mod}.}
   \item{y}{a numeric vector.}
+  \item{eps}{a numeric value indicating the smallest value for flat priors.}
 }
 \details{In \code{specification} \code{kind} can be used for specifying
   if an "independent" or a "conditionallyconjugate"

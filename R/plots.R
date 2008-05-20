@@ -1,4 +1,4 @@
-"BMMdiag" <-
+BMMdiag <-
 function(object, which = 1:2, variables, ask = interactive(), fct1, fct2, 
          xlim, ylim, auto.layout = TRUE, caption = NULL, main = "", ...) {  
   if (!(inherits(object, "jags") && inherits(object$model, "BMMmodel"))) 
@@ -27,7 +27,7 @@ function(object, which = 1:2, variables, ask = interactive(), fct1, fct2,
       h <- 0
       for (i in 1:(numVars-1)) {
         kvar1 <- grep(vars[i], colnames(object$results))
-        var1 <- matrix(object$result[,kvar1], ncol = length(kvar1))
+        var1 <- matrix(object$results[,kvar1], ncol = length(kvar1))
         vars1 <- vars[i]
         if (!missing(fct1)) {
           var1 <- get(fct1)(var1)
@@ -39,7 +39,7 @@ function(object, which = 1:2, variables, ask = interactive(), fct1, fct2,
           kvar2 <- grep(vars[j], colnames(object$results))
           if (length(kvar2) <= k) {
             vars2 <- vars[j]
-            var2 <- matrix(object$result[,kvar2], ncol = length(kvar2))
+            var2 <- matrix(object$results[,kvar2], ncol = length(kvar2))
             if (!missing(fct2)) {
               var2 <- get(fct2)(var2)
               vars2 <- paste(fct2, "(", vars2, ")", sep = "")
@@ -64,7 +64,7 @@ function(object, which = 1:2, variables, ask = interactive(), fct1, fct2,
       varNam <- vars[l]
       kvar <- grep(varNam, colnames(object$results))
       if (length(kvar) > 1) {
-        var <- matrix(object$result[,kvar], ncol = length(kvar))
+        var <- matrix(object$results[,kvar], ncol = length(kvar))
         if (setxlim) xlim <- range(var)
         plot(xlim, xlim, type = "l", xlab = paste(varNam,"[k]", sep = ""), ylab = paste(varNam, "[l]", sep = ""),
              main = main, ...)
@@ -86,7 +86,7 @@ BMMposteriori <- function(object, class, caption = NULL, plot = TRUE, auto.layou
   k <- object$model$data$k
   if (missing(class)) class <- 1:k
   if (is.null(caption)) caption <- paste("Group", class)
-  S <- object$result[,grep("S", colnames(object$results))]
+  S <- object$results[,grep("S", colnames(object$results))]
   if (dim(S)[2] == 0) stop("A posteriori plot not possible. Please provide class observations!")
   uniqPoints <- unique(object$data)
   n <- dim(object$results)[1]
@@ -120,7 +120,7 @@ plot.BMMposteriori <- function(x, caption, main = "", ...) {
 # Plot method for jags objects adapted from plot.mcmc in package coda
 # written by Martyn Plummer, Nicky Best, Kate Cowles, Karen Vines
 
-"plot.jags" <-
+plot.jags <-
 function (x, variables = NULL, trace = TRUE, density = TRUE, 
                        smooth = TRUE, bwf, num, xlim, auto.layout = TRUE, ask = interactive(), ...)  
 {

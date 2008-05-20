@@ -1,4 +1,4 @@
-"JAGSrun" <-  function(y, prefix = yname,  model = BMMmodel(k = 2),
+JAGSrun <-  function(y, prefix = yname,  model = BMMmodel(k = 2),
                        control = JAGScontrol(variables = c("mu", "tau", "eta")),
                        tmp = TRUE, cleanup = TRUE, jags = getOption("jags.exe"), ...) {
   yname <- deparse(substitute(y))
@@ -27,7 +27,7 @@
   }
   if (!exit) {
     if (cleanup) {
-     unlink(c(paste(prefix, c(".cmd", ".bug","-inits.R", "-data.R", ".txt"), sep = ""), "jags.out", "jags.ind"))
+     unlink(c(paste(prefix, c(".cmd", ".bug","-inits.R", "-data.R", ".txt"), sep = ""), "CODAchain1.txt", "CODAindex.txt"))
     }
     if (tmp) setwd(dir)
   }
@@ -41,7 +41,7 @@
 # summary.mcmc in package coda written by Martyn Plummer, Nicky Best,
 # Kate Cowles, Karen Vines
 
-"print.jags" <-
+print.jags <-
 function(x, ...) {
   cat("\nCall:\n", deparse(x$call), "\n\n", sep = "")
   if (inherits(x$model, "BMMmodel")) {
@@ -51,7 +51,7 @@ function(x, ...) {
           "\nEnd =", end(x$results), "\nThinning interval =", thin(x$results), 
           "\n")
       for (i in x$variables) {
-        y <- x$results[,grep(i, colnames(x$results)), drop = FALSE]
+        y <- x$results[,grep(paste("^", i, sep = ""), colnames(x$results)), drop = FALSE]
         if(dim(y)[2] <=  x$model$data$k) {
           yout <- summaryShort.mcmc(y)
           class(yout) <- "summaryShort.mcmc"
@@ -64,7 +64,7 @@ function(x, ...) {
 }
 
 
-"summaryShort.mcmc" <-
+summaryShort.mcmc <-
 function (object, quantiles = c(0.025, 0.975), 
     ...) 
 {
@@ -92,7 +92,7 @@ function (object, quantiles = c(0.025, 0.975),
     return(out)
 }
 
-"print.summaryShort.mcmc" <-
+print.summaryShort.mcmc <-
 function(x, digits = max(3, .Options$digits - 3), ...) {
   if (is.matrix(x$statistics)) {
     print(cbind(x$statistics, x$quantiles), digits = digits, ...)

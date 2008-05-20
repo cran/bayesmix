@@ -8,25 +8,25 @@ priorsRaftery <- function(y) {
   para
 }
 
-priorsFish <- function(y) {
+priorsFish <- function(y, eps = 10^-16) {
   para <- list()
   para$b0 <- median(y)
   para$B0 <- 10
   para$nu0 <- 20
-  para$S0 <- 0
+  para$S0 <- eps
   para
 }
 
-priorsUncertain <- function(y) {
+priorsUncertain <- function(y, eps = 10^-16) {
   para <- list()
   para$b0 <- mean(y)
-  para$B0 <- Inf
-  para$nu0 <- 0
-  para$S0 <- 0
+  para$B0 <- 1/eps
+  para$nu0 <- eps
+  para$S0 <- eps
   para
 }
   
-BMMpriors <- function(specification, y) {
+BMMpriors <- function(specification, y, eps = 10^-16) {
   priors <- list()
   default <- list(kind = "independence", parameter = "priorsUncertain", hierarchical = NULL, mod = list()) 
   if (missing(specification)) specification <- default
@@ -64,7 +64,7 @@ BMMpriors <- function(specification, y) {
       names(priors$name) <- c("type", "hierarchical prior for")
       for (x in c("g0", "G0")) {
         if (!x %in% names(var)) {
-          var[[x]] <- 0
+          var[[x]] <- eps
         }
       }
       priors$var <- c(priors$var, list(g0Half = var$g0/2, g0G0Half = var$g0/2*var$G0))

@@ -1,5 +1,5 @@
 ## Function taken from e1071
-"permutations" <- function (n) {
+permutations <- function (n) {
     if (n == 1) 
         return(matrix(1))
     else if (n < 2) 
@@ -19,7 +19,7 @@
 }
 
 
-"Sort" <- function(x, by = NULL) {
+Sort <- function(x, by = NULL) {
   if (!(inherits(x, "jags") && inherits(x$model, "BMMmodel"))) 
     stop("Use only with 'jags' objects with model of class 'BMMmodel'.")
   x.old <- x

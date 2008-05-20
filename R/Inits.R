@@ -1,11 +1,11 @@
-"initsPrint" <-
+initsPrint <-
 function(x) {
   x$B <- NULL
   var <- initsVar(x)
   paste("list(",paste(var, collapse = ",\n "),")\n")
 }
 
-"initsVar" <-
+initsVar <-
 function(x) {
   n <- length(x)
   var <- vector(length = n)
@@ -13,7 +13,7 @@ function(x) {
   var
 }
 
-"initsFS" <-
+initsFS <-
 function(x, k, restrict, initialValues = list()) {
   if (missing(restrict)) restrict <- ""
   x <- as.matrix(x)
@@ -21,7 +21,7 @@ function(x, k, restrict, initialValues = list()) {
   eta <- rep(1/k,k)
   eta[k] = 1-sum(eta[-k])
   if (restrict == "mu")  mu <- mean(x)
-  else mu <- quantile(x, probs = seq(1/(k+1),k/(k+1),length = k))
+  else mu <- quantile(x, probs = seq(1/(k+1),k/(k+1), length.out = k))
   names(mu) <- NULL
   R <- IQR(x)
   sigma2 <- (R/1.34)^2

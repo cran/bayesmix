@@ -6,13 +6,16 @@
   Creates the text for the file where all the commands for jags are included.
 }
 \usage{
-JAGScontrol(variables, draw = 1000, burnIn = 0, seed)
+JAGScontrol(variables, draw = 1000, burnIn = 0, seed, rng =
+            c("base::Wichmann-Hill", "base::Marsaglia-Multicarry",
+            "base::Super-Duper", "base::Mersenne-Twister"))
 }
 \arguments{
   \item{variables}{names of variables which shall be monitored.}
   \item{draw}{number of monitored draws.}
   \item{burnIn}{number of discarded burn-in draws.}
   \item{seed}{integer setting the seed for the RNG.}
+  \item{rng}{specification of random number generator.}
 }
 \details{This function creates the text for the .cmd-file. It includes
   information on the number of burn-in draws and monitored
