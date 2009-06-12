@@ -155,6 +155,7 @@ function(var)  {
       }
     }
   }
+  varlist
 }
 
 print.JAGSmodel <- function(x, ...) {
