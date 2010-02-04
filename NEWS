@@ -1,3 +1,8 @@
+Changes in bayesmix version 0.7
+
+  o bayesmix now uses functionality from package rjags for the MCMC
+    simulations instead of calling the stand-alone software JAGS
+
 Changes in bayesmix version 0.6-0
 
   o bayesmix modified to work with jags-1.0.2

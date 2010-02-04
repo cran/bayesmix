@@ -21,7 +21,7 @@
   \emph{Applied Statistics}, \bold{27}, 131--8.  
 }
 \examples{
-data(darwin)
+data("darwin", package = "bayesmix")
 ## Estimated sample density
 plot(density(darwin[[1]]), ylim = c(0, 0.02), main = "Outlier modelling")
 ss <- seq(-100, 100, by = 1)
@@ -29,8 +29,8 @@ ss <- seq(-100, 100, by = 1)
 lines(ss, dnorm(ss, mean = mean(darwin), sd = sd(darwin)), col = "red")
 ## Normal density with estimated mean and sd of sample, where the 2
 ## extremely small values are removed
-lines(ss, dnorm(ss, mean = mean(darwin[-c(1:2),1]), sd = sd(darwin[-c(1:2),1])),
-      col = "green")
+lines(ss, dnorm(ss, mean = mean(darwin[-c(1:2),1]),
+      sd = sd(darwin[-c(1:2),1])), col = "green")
 }
 \keyword{datasets}
 

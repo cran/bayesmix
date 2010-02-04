@@ -6,7 +6,8 @@
 }
 \usage{
 \method{plot}{jags}(x, variables = NULL, trace = TRUE, density = TRUE,
-smooth = TRUE, bwf, num, xlim, auto.layout = TRUE, ask = interactive(), ...)
+     smooth = TRUE, bwf, num, xlim, auto.layout = TRUE,
+     ask = interactive(), ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -34,7 +35,7 @@ smooth = TRUE, bwf, num, xlim, auto.layout = TRUE, ask = interactive(), ...)
   of the \code{jags} object is called (\code{plot.mcmc}).
 }
 \author{Bettina Gruen}
-\seealso{\code{plot.mcmc}, \code{\link{BMMdiag}},
+\seealso{\code{\link[coda]{plot.mcmc}}, \code{\link{BMMdiag}},
   \code{\link{BMMposteriori}}}
 \keyword{hplot}
 

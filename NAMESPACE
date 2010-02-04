@@ -1,5 +1,5 @@
-export(JAGSrun, JAGSsetup, JAGScall, JAGSread, BMMmodel, JAGScontrol,
-       BMMpriors, BMMposteriori, Sort, haveJAGS, randomPermutation, BMMdiag, 
+export(JAGSrun, JAGScall, BMMmodel, JAGScontrol,
+       BMMpriors, BMMposteriori, Sort, randomPermutation, BMMdiag, 
        initsFS, priorsFish, priorsRaftery, priorsUncertain)
 
 S3method("plot", "jags")
@@ -7,4 +7,3 @@ S3method("plot", "BMMposteriori")
 
 S3method("print", "jags")
 S3method("print", "JAGSmodel")
-S3method("print", "JAGScontrol")

@@ -4,8 +4,7 @@
 \description{
   Given a \code{jags} object with model of class \code{BMMmodel} the
   aposteriori probabilities are determined. If \code{plot=TRUE}, the
-  resulting object of class \code{BMMposteriori} is plotted by calling
-  \code{plot.BMMposteriori}.
+  resulting object of class \code{BMMposteriori} is plotted.
 }
 \usage{
 BMMposteriori(object, class, caption = NULL, plot = TRUE,

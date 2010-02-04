@@ -91,7 +91,7 @@ function(priors) {
     if (!any(is.na(priors$var[[i]]))) {
       cc <- priors$var[[i]]
       if (length(cc) > 1) {
-        for (j in 1:length(cc)) {
+        for (j in seq_along(cc)) {
           parlist <- paste(parlist, "\t", i,"[",j,"] <- ",cc[j],";\n ", sep = "")
         }
       }
@@ -108,7 +108,7 @@ function(priors, restrict) {
   var <- c(priors$var, priors$inits)
   if (restrict == "tau") var$tau <- rep(NA, 1)
   if (restrict == "mu") var$mu <- rep(NA, 1)
-  for (i in 1:length(var)) {
+  for (i in seq_along(var)) {
     if (length(var[[i]]) > 1) assign(names(var[i]), paste(names(var[i]),"[j]", sep = ""))
     else assign(names(var[i]), names(var[i]))
   }

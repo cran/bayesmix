@@ -1,6 +1,6 @@
-JAGSrun <-  function(y, prefix = yname,  model = BMMmodel(k = 2),
-                       control = JAGScontrol(variables = c("mu", "tau", "eta")),
-                       tmp = TRUE, cleanup = TRUE, jags = getOption("jags.exe"), ...) {
+JAGSrun <-  function(y, prefix = yname, model = BMMmodel(k = 2),
+                     control = JAGScontrol(variables = c("mu", "tau", "eta")),
+                     tmp = TRUE, cleanup = TRUE, ...) {
   yname <- deparse(substitute(y))
   if (!is.null(dim(y))) {
     if (dim(y)[1] == 1) y <- y[1,]
@@ -17,22 +17,13 @@ JAGSrun <-  function(y, prefix = yname,  model = BMMmodel(k = 2),
     }
     setwd(tmpdir)
   }
-  specification <- JAGSsetup(model, y, prefix, control, ...)
-  exit <- JAGScall(prefix, jags)
-  results <- JAGSread(exit)
-  if (any(!is.finite(results$results))) {
-    warning("Infinite values occured: These draws are omitted!")
-    results$results <- na.omit(results$results)
-    if (dim(results$results)[1] == 0) results$results <- NULL else results$results <- as(results$results, "mcmc")
+  results <- JAGScall(model, y, prefix, control, ...)
+  if (cleanup) {
+    unlink(paste(prefix, ".bug", sep = ""))
   }
-  if (!exit) {
-    if (cleanup) {
-     unlink(c(paste(prefix, c(".cmd", ".bug","-inits.R", "-data.R", ".txt"), sep = ""), "CODAchain1.txt", "CODAindex.txt"))
-    }
-    if (tmp) setwd(dir)
-  }
-  z = list(call = cl, results = results$results, model = specification$model,
-    variables = results$variables, data = y)
+  if (tmp) setwd(dir)
+  z <- list(call = cl, results = results$results, model = results$model,
+            variables = results$variables, data = y)
   class(z) <- "jags"
   z
 }
@@ -41,8 +32,7 @@ JAGSrun <-  function(y, prefix = yname,  model = BMMmodel(k = 2),
 # summary.mcmc in package coda written by Martyn Plummer, Nicky Best,
 # Kate Cowles, Karen Vines
 
-print.jags <-
-function(x, ...) {
+print.jags <- function(x, ...) {
   cat("\nCall:\n", deparse(x$call), "\n\n", sep = "")
   if (inherits(x$model, "BMMmodel")) {
     if (is.null(x$results)) cat("No results!\n")
@@ -63,43 +53,36 @@ function(x, ...) {
   }
 }
 
-
-summaryShort.mcmc <-
-function (object, quantiles = c(0.025, 0.975), 
-    ...) 
-{
-    x <- as(object, "mcmc")
-    statnames <- c("Mean", "SD")
-    varstats <- matrix(nrow = nvar(x), ncol = length(statnames), 
-        dimnames = list(varnames(x), statnames))
-    if (is.matrix(x)) {
-        xmean <- apply(x, 2, mean)
-        xvar <- apply(x, 2, var)
-        varquant <- t(apply(x, 2, quantile, quantiles))
-    }
-    else {
-        xmean <- mean(x, na.rm = TRUE)
-        xvar <- var(x, na.rm = TRUE)
-        varquant <- quantile(x, quantiles)
-    }
-    varstats[, 1] <- xmean
-    varstats[, 2] <- sqrt(xvar)
-    varstats <- drop(varstats)
-    varquant <- drop(varquant)
-    out <- list(statistics = varstats, quantiles = varquant,
-        start = start(x), end = end(x), thin = thin(x), nchain = 1)
-    class(out) <- "summaryShort.mcmc"
-    return(out)
+summaryShort.mcmc <- function (object, quantiles = c(0.025, 0.975), 
+                               ...) {
+  x <- as(object, "mcmc")
+  statnames <- c("Mean", "SD")
+  varstats <- matrix(nrow = nvar(x), ncol = length(statnames), 
+                     dimnames = list(varnames(x), statnames))
+  if (is.matrix(x)) {
+    xmean <- apply(x, 2, mean)
+    xvar <- apply(x, 2, var)
+    varquant <- t(apply(x, 2, quantile, quantiles))
+  }
+  else {
+    xmean <- mean(x, na.rm = TRUE)
+    xvar <- var(x, na.rm = TRUE)
+    varquant <- quantile(x, quantiles)
+  }
+  varstats[, 1] <- xmean
+  varstats[, 2] <- sqrt(xvar)
+  varstats <- drop(varstats)
+  varquant <- drop(varquant)
+  out <- list(statistics = varstats, quantiles = varquant,
+              start = start(x), end = end(x), thin = thin(x), nchain = 1)
+  class(out) <- "summaryShort.mcmc"
+  return(out)
 }
 
-print.summaryShort.mcmc <-
-function(x, digits = max(3, .Options$digits - 3), ...) {
+print.summaryShort.mcmc <- function(x, digits = max(3, .Options$digits - 3), ...) {
   if (is.matrix(x$statistics)) {
     print(cbind(x$statistics, x$quantiles), digits = digits, ...)
   }
   else print(c(x$statistics, x$quantiles), digits = digits, ...)
 }
 
-.collapse <- function(text, prefix) {
-  paste(text, collapse = prefix)
-}

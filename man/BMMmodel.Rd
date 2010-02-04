@@ -1,11 +1,10 @@
 \name{BMMmodel}
 \alias{BMMmodel}
 \alias{print.JAGSmodel}
-\title{Creates text for .bug-file and data for -inits.R and
-  -data.R-file} 
+\title{Creates bugs model.} 
 \description{
-  Creates the text for the BUGS-model specification and the values of the
-  initialization, prior specification and the observations read in by jags. 
+  Creates the BUGS-model specification and return the values for the
+  initialization, the prior specification and the observations.
 }
 \usage{
 BMMmodel(y, k, priors, inits = "initsFS", aprioriWeights = 1,
@@ -44,22 +43,22 @@ BMMmodel(y, k, priors, inits = "initsFS", aprioriWeights = 1,
   in its class stays there.  
 }
 \value{
-  If \code{y} is specified there is an object of class \code{BMMmodel}
+  If \code{y} is specified an object of class \code{BMMmodel} is
   returned with components:
-  \item{inits}{named list for -inits.R-file.}
-  \item{data}{named list for -data.R-file.}
+  \item{inits}{named list.}
+  \item{data}{named list.}
   \item{bugs}{text for .bug-file with prefix missing.}
 
-  If \code{y} is missing there is an object of class \code{BMMsetup}
-  returned containing the parameter specifications. When \code{JAGSsetup}
+  If \code{y} is missing an object of class \code{BMMsetup} is
+  returned containing the parameter specifications. When \code{JAGScall}
   is called with this object as model argument, \code{BMMmodel} is
   called with \code{y} and the other parameters as input arguments
-  before creating the input files for jags.
+  before calling JAGS.
 }
 \author{Bettina Gruen}
 \seealso{\code{\link{JAGSrun}}, \code{\link{initsFS}}}
 \examples{
-data(fish)
+data("fish", package = "bayesmix")
 model <- BMMmodel(fish, k = 4, priors = list(kind = "independence",
                   parameter = "priorsFish", hierarchical = "tau"),
                   initialValues = list(S0 = 2))

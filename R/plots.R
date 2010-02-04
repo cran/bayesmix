@@ -1,6 +1,5 @@
-BMMdiag <-
-function(object, which = 1:2, variables, ask = interactive(), fct1, fct2, 
-         xlim, ylim, auto.layout = TRUE, caption = NULL, main = "", ...) {  
+BMMdiag <- function(object, which = 1:2, variables, ask = interactive(), fct1, fct2, 
+                    xlim, ylim, auto.layout = TRUE, caption = NULL, main = "", ...) {  
   if (!(inherits(object, "jags") && inherits(object$model, "BMMmodel"))) 
     stop("Use only with 'jags' objects with model of class 'BMMmodel'.")
   if (!is.numeric(which) || any(which < 1) || any(which > 2)) 
@@ -25,7 +24,7 @@ function(object, which = 1:2, variables, ask = interactive(), fct1, fct2,
     if (numVars > 1) {
       if (auto.layout) oldpar <- c(oldpar, par(mfrow = c(1, numVars*(numVars-1)/2)))
       h <- 0
-      for (i in 1:(numVars-1)) {
+      for (i in seq_len(numVars-1)) {
         kvar1 <- grep(vars[i], colnames(object$results))
         var1 <- matrix(object$results[,kvar1], ncol = length(kvar1))
         vars1 <- vars[i]
@@ -34,7 +33,7 @@ function(object, which = 1:2, variables, ask = interactive(), fct1, fct2,
           vars1 <- paste(fct1, "(", vars1, ")", sep = "")
         }
         if (setxlim) xlim <- range(var1)
-        for (j in (i + 1):numVars) {
+        for (j in seq_len(numVars)[-seq_len(i)]) {
           h <- h + 1
           kvar2 <- grep(vars[j], colnames(object$results))
           if (length(kvar2) <= k) {
@@ -49,9 +48,7 @@ function(object, which = 1:2, variables, ask = interactive(), fct1, fct2,
                  ylim = ylim, xlab = vars1, ylab = vars2, main = main, ...)
             mtext(caption[h], 3, 0.25)
             h <- max(length(kvar1), length(kvar2))
-            if (h > 1) {
-              for (l in 2:h) points(var1[, min(l,length(kvar1))], var2[, min(l, length(kvar2))], ...)
-            }
+            for (l in seq_len(h)[-1]) points(var1[, min(l,length(kvar1))], var2[, min(l, length(kvar2))], ...)
           }
         }
       }
@@ -60,7 +57,7 @@ function(object, which = 1:2, variables, ask = interactive(), fct1, fct2,
   }
   if (show[2]) {
     if (auto.layout) oldpar <- c(oldpar, par(mfrow = c(1, numVars)))
-    for (l in 1:numVars) {
+    for (l in seq_len(numVars)) {
       varNam <- vars[l]
       kvar <- grep(varNam, colnames(object$results))
       if (length(kvar) > 1) {
@@ -69,8 +66,8 @@ function(object, which = 1:2, variables, ask = interactive(), fct1, fct2,
         plot(xlim, xlim, type = "l", xlab = paste(varNam,"[k]", sep = ""), ylab = paste(varNam, "[l]", sep = ""),
              main = main, ...)
         mtext(caption[numVars*(numVars-1)/2+l], 3, 0.25)
-        for (i in 1:(length(kvar)-1)) {
-          for (j in (i+1):length(kvar)) {
+        for (i in seq_len((length(kvar)-1))) {
+          for (j in seq_along(kvar)[-seq_len(i)]) {
             points(var[,i], var[,j], ...)
             points(var[,j], var[,i], ...)
           }
@@ -84,14 +81,14 @@ BMMposteriori <- function(object, class, caption = NULL, plot = TRUE, auto.layou
   if (!(inherits(object, "jags") && inherits(object$model, "BMMmodel"))) 
     stop("Use only with 'jags' objects with model of class 'BMMmodel'.")
   k <- object$model$data$k
-  if (missing(class)) class <- 1:k
+  if (missing(class)) class <- seq_len(k)
   if (is.null(caption)) caption <- paste("Group", class)
   S <- object$results[,grep("S", colnames(object$results))]
   if (dim(S)[2] == 0) stop("A posteriori plot not possible. Please provide class observations!")
   uniqPoints <- unique(object$data)
   n <- dim(object$results)[1]
   tab <- sapply(uniqPoints, function(x)
-                table(factor(S[,object$data == x], levels = 1:k))/(n*length(which(object$data == x))))
+                table(factor(S[,object$data == x], levels = seq_len(k)))/(n*length(which(object$data == x))))
   x <- list()
   x$post <- tab[class,]
   x$data <- uniqPoints
@@ -109,7 +106,7 @@ BMMposteriori <- function(object, class, caption = NULL, plot = TRUE, auto.layou
 
 plot.BMMposteriori <- function(x, caption, main = "", ...) {
   if (!is.matrix(x$post)) x$post <- matrix(x$post, nrow = 1)
-  for (i in 1:dim(x$post)[1]) {
+  for (i in seq_len(nrow(x$post))) {
     plot(x$data, x$post[i,], type = "h", xlab = "data", ylab = "a posteriori probability",
          ylim = c(0,1), main = main, ...)
     mtext(caption[i], 3, 0.25)
@@ -120,8 +117,7 @@ plot.BMMposteriori <- function(x, caption, main = "", ...) {
 # Plot method for jags objects adapted from plot.mcmc in package coda
 # written by Martyn Plummer, Nicky Best, Kate Cowles, Karen Vines
 
-plot.jags <-
-function (x, variables = NULL, trace = TRUE, density = TRUE, 
+plot.jags <- function (x, variables = NULL, trace = TRUE, density = TRUE, 
                        smooth = TRUE, bwf, num, xlim, auto.layout = TRUE, ask = interactive(), ...)  
 {
   if (inherits(x$model, "BMMmodel")) {
@@ -145,7 +141,7 @@ function (x, variables = NULL, trace = TRUE, density = TRUE,
           oldpar <- par(mfrow = mfrow)
         }
         oldpar <- c(oldpar, par(ask = ask))
-        for (i in 1:nvar(u)) {
+        for (i in seq_len(nvar(u))) {
           y <- mcmc(as.matrix(u)[, i, drop = FALSE], start(u), end(u), thin(u))
           if (trace) 
             traceplot(y, smooth = smooth)

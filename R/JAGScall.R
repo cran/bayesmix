@@ -1,25 +1,15 @@
-JAGSsetup <- function(model, y, prefix, control, ...) {
-  UseMethod("JAGSsetup")
+JAGScontrol <- function(variables, n.iter = 1000, thin = 1, burn.in = 0, seed,
+                        rng = c("base::Wichmann-Hill", "base::Marsaglia-Multicarry",
+                          "base::Super-Duper", "base::Mersenne-Twister")) {
+  rng <- match.arg(rng)
+  c(list(variables = variables, n.iter = n.iter, thin = thin, burn.in = burn.in, 
+         RNG = c(list(".RNG.name" = rng),
+           if (!missing(seed)) list(".RNG.seed" = as.integer(seed)))))
 }
 
-JAGSsetup.default <- function(model, y, prefix, control, ...) {
-  if (!inherits(model, "JAGSmodel")) stop("Only for use with 'JAGSmodel' objects!")
-  with(model$data, dump(names(model$data), file = paste(prefix, "-data.R", sep = "")))
-  if (!is.null(control$RNG)) model$inits <- c(model$inits, control$RNG)
-  with(model$inits, dump(names(model$inits), file = paste(prefix, "-inits.R", sep = "")))
-  if (length(model$bugs) > 1) {
-    model$bugs <- .collapse(model$bugs, prefix)
-  }
-  write(model$bugs, file = paste(prefix,".bug", sep = ""))
-  if (!any(names(control) %in% "text")) stop("control not specified correctly!")
-  if (length(control$text) > 1) {
-    control$text <- .collapse(control$text, prefix)
-  }
-  write(control$text, file = paste(prefix, ".cmd", sep = ""))
-  return(list(control = control, model = model))
-}
+JAGScall <- function(model, y, prefix, control, ...) UseMethod("JAGScall")
 
-JAGSsetup.BMMsetup <- function(model, y, prefix, control, ...) {
+JAGScall.BMMsetup <- function(model, y, prefix, control, ...) {
   dummy <- model
   model <- list(k = 2, priors = BMMpriors(y = y), inits = "initsFS",
                 aprioriWeights = 1, restrict = "none", no.empty.classes = FALSE)
@@ -35,37 +25,27 @@ JAGSsetup.BMMsetup <- function(model, y, prefix, control, ...) {
   model <- BMMmodel(y, model$k, model$priors, model$inits,
                     model$aprioriWeights, model$no.empty.classes, model$restrict, ...)
   if (!inherits(model, "BMMmodel")) stop("Model not specified correctly")
-  JAGSsetup(model, y, prefix, control)
+  JAGScall(model, y, prefix, control)
 }
 
-JAGScall <- function(prefix, jags, quiet = FALSE) {
-  if (is.null(jags)) jags = "jags"
-  if (.Platform$OS.type == "windows") exit <- system(paste(jags, " ", prefix,".cmd", sep = ""))
-  else  exit <- system(paste(jags, "< ",prefix,".cmd > /dev/null", sep = ""), ignore.stderr = quiet)
-  if (exit) stop("System call not successfull")
-  if (file.info("CODAchain1.txt")[1] == 0) exit <- 1
-  exit
+JAGScall.default <- function(model, y, prefix, control, ...) {
+  if (!inherits(model, "JAGSmodel")) stop("Only for use with 'JAGSmodel' objects!")
+  if (!is.null(control$RNG)) model$inits <- c(model$inits, control$RNG)
+  if (length(model$bugs) > 1) model$bugs <- paste(model$bugs, collapse = prefix)
+  FILE <- paste(prefix, "bug", sep = ".")
+  write(model$bugs, file = FILE)
+  JAGSmodel <- jags.model(FILE, inits = model$inits, data = model$data)
+  if (control$burn.in > 0) jags.samples(JAGSmodel, n.iter = control$burn.in)
+  results <- as.mcmc(coda.samples(JAGSmodel, control$variables, control$n.iter, control$thin))
+  index <- grep("tau", colnames(results))
+  variables <- unique(sapply(colnames(results), function(x)
+                             strsplit(x, "\\[")[[1]][1]))
+  results[, index] <- 1/results[, index]
+  colnames(results) <- sub("tau", "sigma2", colnames(results))
+  variables <- sub("tau", "sigma2", variables)
+  list(results = results, model = model, variables = variables)
 }
 
-JAGSread <- function(exit, transform = TRUE) {
-  if (!exit) {
-    if(!all(paste("CODA" ,c("index", "chain1"), ".txt", sep = "") %in% list.files()))
-      stop("Cannot read jags output: CODAindex.txt or CODAchain1.txt file is missing!")
-    results <- read.openbugs(quiet = TRUE)[[1]]
-    index <- grep("tau", colnames(results))
-    variables <- unique(sapply(colnames(results), function(x) strsplit(x, "\\[")[[1]][1]))
-    if (transform & length(index) > 0) {
-      results[,index] <- 1/results[,index]
-      colnames(results) <- sub("tau","sigma2", colnames(results))
-      variables <- sub("tau", "sigma2", variables)
-    }
-  }
-  else{
-    results <- ifelse(file.exists("jags.dump"), source("jags.dump")[[1]], NULL)
-    warning("Jags has encountered an error. Files are not deleted! Dump of jags will be returned.")
-  }
-  return(list(results = results, variables = variables))
-}
 
 
 

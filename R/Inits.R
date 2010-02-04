@@ -1,20 +1,17 @@
-initsPrint <-
-function(x) {
+initsPrint <- function(x) {
   x$B <- NULL
   var <- initsVar(x)
   paste("list(",paste(var, collapse = ",\n "),")\n")
 }
 
-initsVar <-
-function(x) {
+initsVar <- function(x) {
   n <- length(x)
   var <- vector(length = n)
-  for (i in 1:n) var[i] <- paste(names(x)[i], " = c(",paste(x[[i]],collapse = ", "),")", sep = "")
+  for (i in seq_len(n)) var[i] <- paste(names(x)[i], " = c(",paste(x[[i]],collapse = ", "),")", sep = "")
   var
 }
 
-initsFS <-
-function(x, k, restrict, initialValues = list()) {
+initsFS <- function(x, k, restrict, initialValues = list()) {
   if (missing(restrict)) restrict <- ""
   x <- as.matrix(x)
   if (any(names(initialValues) %in% c("mu", "eta", "tau"))) stop("initialValues are not specified correctly")

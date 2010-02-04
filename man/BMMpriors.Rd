@@ -32,8 +32,8 @@ BMMpriors(specification, y, eps = 10^-16)
 }
 \author{Bettina Gruen}
 \examples{
-  data(fish)
+  data("fish", package = "bayesmix")
   priors <- BMMpriors(y = fish)
-  }
+}
 \keyword{utilities}
 

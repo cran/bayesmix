@@ -3,10 +3,10 @@ randomPermutation <- function(x) {
     stop("Use only with 'jags' objects with model of class 'BMMmodel'.")
   k <- x$model$data$k
   n <- dim(x$results)
-  permutedIndex <- as.vector(t(apply(matrix(1:(n[1]*k), ncol = k), 1, sample, size = k)))
+  permutedIndex <- as.vector(t(apply(matrix(seq_len(n[1]*k), ncol = k), 1, sample, size = k)))
   variables <- x$variables
   dropIndex <- NULL
-  for (i in 1:length(variables)) {
+  for (i in seq_along(variables)) {
     name <- variables[i]
     ii <- grep(name, colnames(x$results))
     if (length(ii) == k) {

@@ -50,7 +50,7 @@ BMMpriors <- function(specification, y, eps = 10^-16) {
   }
   if (length(specification$mod) > 0) {
     nam <- names(specification$mod)
-    for (i in 1:length(specification$mod)) {
+    for (i in seq_along(specification$mod)) {
       specification$parameter[[nam[i]]] <- specification$mod[[i]]
     }
   }

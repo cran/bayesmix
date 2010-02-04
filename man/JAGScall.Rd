@@ -2,23 +2,21 @@
 \alias{JAGScall}
 \title{Calls jags}
 \description{
-Given the \code{prefix} of the .cmd-file and the path to jags the program
-jags is called in batch mode by inserting the .cmd-file.
+  Using functionality from package rjags the JAGS model is created and
+  posterior draws are sampled.
 }
 \usage{
-JAGScall(prefix, jags, quiet = FALSE)
+JAGScall(model, y, prefix, control, ...)
 }
 \arguments{
-  \item{prefix}{string: name of .cmd-file.}
-  \item{jags}{string: path to jags.}
-  \item{quiet}{logical indicating whether error messages should be ignored.}
-}
-\details{
-  If \code{jags} is missing, it is assumed that the program
-  jags is in the path such that it is called with jags.
+  \item{model}{\code{JAGSmodel} object or output from \code{BMMmodel}.}
+  \item{y}{a numeric vector.}
+  \item{prefix}{character: prefix for .bug-file.}
+  \item{control}{named list or \code{JAGScontrol} object.}
+  \item{\dots}{additional parameters handed over to \code{BMMmodel}.}
 }
 \value{
-  Returns the exit status.
+  Returns a \code{"jags"} object.
 }
 \author{Bettina Gruen}
 \seealso{\code{\link{JAGSrun}}}

@@ -1,6 +1,6 @@
 \name{plot.BMMposteriori}
 \alias{plot.BMMposteriori}
-\title{Plots a posteriori probabilites of data points}
+\title{Plots a posteriori probabilities of data points}
 \description{
   Plot method for object of class \code{BMMposteriori}, typically
   called by \code{BMMposteriori}.
