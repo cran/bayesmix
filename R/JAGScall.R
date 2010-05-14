@@ -35,7 +35,7 @@ JAGScall.default <- function(model, y, prefix, control, ...) {
   FILE <- paste(prefix, "bug", sep = ".")
   write(model$bugs, file = FILE)
   JAGSmodel <- jags.model(FILE, inits = model$inits, data = model$data)
-  if (control$burn.in > 0) jags.samples(JAGSmodel, n.iter = control$burn.in)
+  if (control$burn.in > 0) jags.samples(JAGSmodel, control$variables, control$burn.in, control$burn.in)
   results <- as.mcmc(coda.samples(JAGSmodel, control$variables, control$n.iter, control$thin))
   index <- grep("tau", colnames(results))
   variables <- unique(sapply(colnames(results), function(x)

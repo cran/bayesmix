@@ -28,6 +28,7 @@ function(y, k, priors, inits = "initsFS", aprioriWeights = 1, no.empty.classes =
     model <- list()
     model$inits <- priors$inits <- inits
     if (priors$name[1] == "condconjugate") priors$var$B <- rep(NA, length(inits$tau*priors$var$B0inv))
+    priors$inits <- priors$inits[names(priors$inits) %in% c("mu", "eta", "tau")]
     priors$var <- priors$var[!names(priors$var) %in% names(priors$inits)]
   
     index <- sapply(priors$var, function(x) (length(x) > 0) && !is.na(x))
@@ -68,6 +69,13 @@ function(y, k, priors, inits = "initsFS", aprioriWeights = 1, no.empty.classes =
                     "\tfor (j in 1:k){\n\t\ttot[j] <- sum(ind[,j]);\n",
                     "\t\tItot[j] ~ dinterval(tot[j], 0);\n\t}\n", sep = "")
       model$data$seg <- diag(k)
+      if (!"S" %in% names(model$inits)) {
+        posterior <- matrix(model$inits$eta * dnorm(rep(y, each = k), model$inits$mu, sqrt(1/model$inits$tau)),
+                            ncol = k, byrow = TRUE)
+        S <- max.col(posterior)
+        model$inits$S <- S
+      }
+      if (any(tabulate(model$inits$S, k) == 0)) stop("Please provide a valid initialization of S.")
     }
     bugs <- paste(bugs,paste("\teta[] ~ ddirch(e[]);\n}\n"), sep = "")
     if (length(priors$name) > 1) {
@@ -136,6 +144,7 @@ function(priors, restrict) {
 
 varSpec <-
 function(var)  {
+  var <- var[c(which(names(var) != "S"), which(names(var) == "S"))]
   varlist = NULL
   for (i in names(var)) {
     if (!is.null(dim(var[[i]]))) {
