@@ -1,4 +1,5 @@
 priorsRaftery <- function(y) {
+  y <- as.matrix(y)
   para <- list()
   para$b0 <- mean(y)
   R <- diff(range(y))
@@ -9,6 +10,7 @@ priorsRaftery <- function(y) {
 }
 
 priorsFish <- function(y, eps = 10^-16) {
+  y <- as.matrix(y)
   para <- list()
   para$b0 <- median(y)
   para$B0 <- 10
@@ -18,6 +20,7 @@ priorsFish <- function(y, eps = 10^-16) {
 }
 
 priorsUncertain <- function(y, eps = 10^-16) {
+  y <- as.matrix(y)
   para <- list()
   para$b0 <- mean(y)
   para$B0 <- 1/eps
@@ -43,7 +46,7 @@ BMMpriors <- function(specification, y, eps = 10^-16) {
     specification <- default
   }
   priors$name <- match.arg(tolower(specification$kind), c("independence", "condconjugate"))
-  y <- as.vector(y)
+  y <- as.matrix(y)
   parameter <- specification$parameter
   if (is.character(parameter)) {
     specification$parameter <- get(parameter)(y)

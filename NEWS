@@ -1,3 +1,8 @@
+Changes in bayesmix version 0.7-2
+
+  o Avoid to use methods mean(<data.frame>) and sd(<data.frame>)
+    (deprecated in R-2.14)
+
 Changes in bayesmix version 0.7-1
 
   o bayesmix was modified to work with rjags >= 2.1.0 with changes if
