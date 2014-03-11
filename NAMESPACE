@@ -1,3 +1,6 @@
+import("rjags")
+import("coda")
+
 export(JAGSrun, JAGScall, BMMmodel, JAGScontrol,
        BMMpriors, BMMposteriori, Sort, randomPermutation, BMMdiag, 
        initsFS, priorsFish, priorsRaftery, priorsUncertain)
