@@ -37,8 +37,8 @@ print.jags <- function(x, ...) {
   if (inherits(x$model, "BMMmodel")) {
     if (is.null(x$results)) cat("No results!\n")
     else {
-      cat("Markov Chain Monte Carlo (MCMC) output:\nStart =", start(x$results), 
-          "\nEnd =", end(x$results), "\nThinning interval =", thin(x$results), 
+      cat("Markov Chain Monte Carlo (MCMC) output:\nStart =", stats::start(x$results), 
+          "\nEnd =", stats::end(x$results), "\nThinning interval =", thin(x$results), 
           "\n")
       for (i in x$variables) {
         y <- x$results[,grep(paste("^", i, sep = ""), colnames(x$results)), drop = FALSE]
@@ -55,26 +55,26 @@ print.jags <- function(x, ...) {
 
 summaryShort.mcmc <- function (object, quantiles = c(0.025, 0.975), 
                                ...) {
-  x <- as(object, "mcmc")
+  x <- methods::as(object, "mcmc")
   statnames <- c("Mean", "SD")
   varstats <- matrix(nrow = nvar(x), ncol = length(statnames), 
                      dimnames = list(varnames(x), statnames))
   if (is.matrix(x)) {
     xmean <- apply(x, 2, mean)
-    xvar <- apply(x, 2, var)
-    varquant <- t(apply(x, 2, quantile, quantiles))
+    xvar <- apply(x, 2, stats::var)
+    varquant <- t(apply(x, 2, stats::quantile, quantiles))
   }
   else {
     xmean <- mean(x, na.rm = TRUE)
-    xvar <- var(x, na.rm = TRUE)
-    varquant <- quantile(x, quantiles)
+    xvar <- stats::var(x, na.rm = TRUE)
+    varquant <- stats::quantile(x, quantiles)
   }
   varstats[, 1] <- xmean
   varstats[, 2] <- sqrt(xvar)
   varstats <- drop(varstats)
   varquant <- drop(varquant)
   out <- list(statistics = varstats, quantiles = varquant,
-              start = start(x), end = end(x), thin = thin(x), nchain = 1)
+              start = stats::start(x), end = stats::end(x), thin = thin(x), nchain = 1)
   class(out) <- "summaryShort.mcmc"
   return(out)
 }

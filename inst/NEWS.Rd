@@ -1,5 +1,11 @@
 \name{NEWS}
 \title{News for Package 'bayesmix'}
+\section{Changes in bayesmix version 0.7-4}{
+  \itemize{
+    \item Functions from packages \pkg{stats} and \pkg{graphics} are now
+      correctly imported.
+  }
+}
 \section{Changes in bayesmix version 0.7-3}{
   \itemize{
     \item Packages \pkg{rjags} and \pkg{coda} moved from Depends to Imports. 

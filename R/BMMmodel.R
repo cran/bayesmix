@@ -70,7 +70,7 @@ function(y, k, priors, inits = "initsFS", aprioriWeights = 1, no.empty.classes =
                     "\t\tItot[j] ~ dinterval(tot[j], 0);\n\t}\n", sep = "")
       model$data$seg <- diag(k)
       if (!"S" %in% names(model$inits)) {
-        posterior <- matrix(model$inits$eta * dnorm(rep(y, each = k), model$inits$mu, sqrt(1/model$inits$tau)),
+        posterior <- matrix(model$inits$eta * stats::dnorm(rep(y, each = k), model$inits$mu, sqrt(1/model$inits$tau)),
                             ncol = k, byrow = TRUE)
         S <- max.col(posterior)
         model$inits$S <- S

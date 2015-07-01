@@ -6,8 +6,8 @@ BMMdiag <- function(object, which = 1:2, variables, ask = interactive(), fct1, f
     stop("`which' must be in 1:2")
   k <- object$model$data$k
   oldpar <- NULL
-  on.exit(par(oldpar))
-  oldpar <- par(ask = ask)
+  on.exit(graphics::par(oldpar))
+  oldpar <- graphics::par(ask = ask)
   show <- rep(FALSE, 2)
   show[which] <- TRUE
   if (missing(variables)) variables <- object$variables
@@ -22,7 +22,7 @@ BMMdiag <- function(object, which = 1:2, variables, ask = interactive(), fct1, f
   }
   if (show[1]) {
     if (numVars > 1) {
-      if (auto.layout) oldpar <- c(oldpar, par(mfrow = c(1, numVars*(numVars-1)/2)))
+      if (auto.layout) oldpar <- c(oldpar, graphics::par(mfrow = c(1, numVars*(numVars-1)/2)))
       h <- 0
       for (i in seq_len(numVars-1)) {
         kvar1 <- grep(vars[i], colnames(object$results))
@@ -44,11 +44,11 @@ BMMdiag <- function(object, which = 1:2, variables, ask = interactive(), fct1, f
               vars2 <- paste(fct2, "(", vars2, ")", sep = "")
             }            
             if (setylim) ylim <- range(var2)
-            plot(var1[,1], var2[,1], xlim = xlim,
-                 ylim = ylim, xlab = vars1, ylab = vars2, main = main, ...)
-            mtext(caption[h], 3, 0.25)
+            graphics::plot(var1[,1], var2[,1], xlim = xlim,
+                           ylim = ylim, xlab = vars1, ylab = vars2, main = main, ...)
+            graphics::mtext(caption[h], 3, 0.25)
             h <- max(length(kvar1), length(kvar2))
-            for (l in seq_len(h)[-1]) points(var1[, min(l,length(kvar1))], var2[, min(l, length(kvar2))], ...)
+            for (l in seq_len(h)[-1]) graphics::points(var1[, min(l,length(kvar1))], var2[, min(l, length(kvar2))], ...)
           }
         }
       }
@@ -56,20 +56,20 @@ BMMdiag <- function(object, which = 1:2, variables, ask = interactive(), fct1, f
     else warning("The first plot option requires at least two variables.")
   }
   if (show[2]) {
-    if (auto.layout) oldpar <- c(oldpar, par(mfrow = c(1, numVars)))
+    if (auto.layout) oldpar <- c(oldpar, graphics::par(mfrow = c(1, numVars)))
     for (l in seq_len(numVars)) {
       varNam <- vars[l]
       kvar <- grep(varNam, colnames(object$results))
       if (length(kvar) > 1) {
         var <- matrix(object$results[,kvar], ncol = length(kvar))
         if (setxlim) xlim <- range(var)
-        plot(xlim, xlim, type = "l", xlab = paste(varNam,"[k]", sep = ""), ylab = paste(varNam, "[l]", sep = ""),
+        graphics::plot(xlim, xlim, type = "l", xlab = paste(varNam,"[k]", sep = ""), ylab = paste(varNam, "[l]", sep = ""),
              main = main, ...)
-        mtext(caption[numVars*(numVars-1)/2+l], 3, 0.25)
+        graphics::mtext(caption[numVars*(numVars-1)/2+l], 3, 0.25)
         for (i in seq_len((length(kvar)-1))) {
           for (j in seq_along(kvar)[-seq_len(i)]) {
-            points(var[,i], var[,j], ...)
-            points(var[,j], var[,i], ...)
+            graphics::points(var[,i], var[,j], ...)
+            graphics::points(var[,j], var[,i], ...)
           }
         }
       }
@@ -95,10 +95,10 @@ BMMposteriori <- function(object, class, caption = NULL, plot = TRUE, auto.layou
   class(x) <- "BMMposteriori"
   if (plot) {
     if (auto.layout) {
-      oldpar <- par(mfrow = c(length(class), 1))
-      on.exit(par(oldpar))
+      oldpar <- graphics::par(mfrow = c(length(class), 1))
+      on.exit(graphics::par(oldpar))
     }
-    plot(x, caption, ...)
+    graphics::plot(x, caption, ...)
     invisible(x)
   }
   else x
@@ -107,10 +107,10 @@ BMMposteriori <- function(object, class, caption = NULL, plot = TRUE, auto.layou
 plot.BMMposteriori <- function(x, caption, main = "", ...) {
   if (!is.matrix(x$post)) x$post <- matrix(x$post, nrow = 1)
   for (i in seq_len(nrow(x$post))) {
-    plot(x$data, x$post[i,], type = "h", xlab = "data", ylab = "a posteriori probability",
+    graphics::plot(x$data, x$post[i,], type = "h", xlab = "data", ylab = "a posteriori probability",
          ylim = c(0,1), main = main, ...)
-    mtext(caption[i], 3, 0.25)
-    points(x$data, x$post[i,], pch = 19, ...)
+    graphics::mtext(caption[i], 3, 0.25)
+    graphics::points(x$data, x$post[i,], pch = 19, ...)
   }
 }
 
@@ -172,15 +172,15 @@ plot.jags <- function (x, variables = NULL, trace = TRUE, density = TRUE,
           u <- u[,num, drop = FALSE]
         }
         oldpar <- NULL
-        on.exit(par(oldpar))
+        on.exit(graphics::par(oldpar))
         if (auto.layout) {
           mfrow <- set.mfrow(Nchains = nchain(u), Nparms = nvar(u), 
                              nplots = trace + density)
-          oldpar <- par(mfrow = mfrow)
+          oldpar <- graphics::par(mfrow = mfrow)
         }
-        oldpar <- c(oldpar, par(ask = ask))
+        oldpar <- c(oldpar, graphics::par(ask = ask))
         for (i in seq_len(nvar(u))) {
-          y <- mcmc(as.matrix(u)[, i, drop = FALSE], start(u), end(u), thin(u))
+          y <- mcmc(as.matrix(u)[, i, drop = FALSE], stats::start(u), stats::end(u), thin(u))
           if (trace) 
             traceplot(y, smooth = smooth)
           if (density) {
@@ -195,5 +195,5 @@ plot.jags <- function (x, variables = NULL, trace = TRUE, density = TRUE,
       else warning("Variable ", name, " omitted.")
     }
   }
-  else plot(x$results)
+  else graphics::plot(x$results)
 }

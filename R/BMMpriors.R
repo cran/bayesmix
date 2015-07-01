@@ -5,18 +5,15 @@ priorsRaftery <- function(y) {
   R <- diff(range(y))
   para$B0 <- 2.6/R^2
   para$nu0 <- 2.56
-  para$S0 <- (length(y)-1)/length(y)*var(y)
+  para$S0 <- (length(y)-1)/length(y) * stats::var(y)
   para
 }
 
 priorsFish <- function(y, eps = 10^-16) {
-  y <- as.matrix(y)
-  para <- list()
-  para$b0 <- median(y)
-  para$B0 <- 10
-  para$nu0 <- 20
-  para$S0 <- eps
-  para
+  list(b0 = stats::median(as.matrix(y)),
+       B0 = 10,
+       nu0 = 20,
+       S0 = eps)
 }
 
 priorsUncertain <- function(y, eps = 10^-16) {
