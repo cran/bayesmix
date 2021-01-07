@@ -1,5 +1,10 @@
 \name{NEWS}
 \title{News for Package 'bayesmix'}
+\section{Changes in bayesmix version 0.7-5}{
+  \itemize{
+    \item Maintainer e-mail changed.
+  }
+}
 \section{Changes in bayesmix version 0.7-4}{
   \itemize{
     \item Functions from packages \pkg{stats} and \pkg{graphics} are now

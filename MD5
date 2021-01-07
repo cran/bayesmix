@@ -1,4 +1,4 @@
-4468e8179fe3e61b1c91f0db7ba1d596 *DESCRIPTION
+ba7bc6d948ffeb2f82203c3a337b8a34 *DESCRIPTION
 b71028869c139dab423cd2c6985edf0e *NAMESPACE
 1abac27e717abfdf7a0347926433f738 *R/BMMmodel.R
 cddec915d3d244c74d986617105a6507 *R/BMMpriors.R
@@ -10,7 +10,7 @@ c1bee719b32aeebb0c921c82be0cd0d2 *R/Inits.R
 11ddaf7b53db615c555fe17682003404 *R/randomPermutation.R
 56459a203e441b148e2584e9acd2f5f5 *data/darwin.tab.gz
 db1596f93acfb33597875648d1b9862f *data/fish.tab.gz
-7cfc33dc356dc6fa8fef443adf7b56ad *inst/NEWS.Rd
+9d7bbd21a3cc49300f1f03ddfcc5c213 *inst/NEWS.Rd
 0c33f5fccd1a12312342401104f4adfe *man/BMMdiag.Rd
 84b24e10e86fdf86f3c78d98ab682595 *man/BMMmodel.Rd
 d3ebbf12a03793895f46cf2332ee1224 *man/BMMposteriori.Rd
