@@ -9,7 +9,7 @@
 randomPermutation(x)
 }
 \arguments{
-  \item{x}{a \code{jags} object with model of class \code{BMMmodel}.}
+  \item{x}{a \code{JAGSrun} object with model of class \code{BMMmodel}.}
 }
 \details{
   The draws are permuted with respect to the different classes

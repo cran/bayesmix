@@ -1,8 +1,8 @@
 \name{BMMposteriori}
 \alias{BMMposteriori}
-\title{Plots aposteriori probabilities of data points}
+\title{Plot aposteriori probabilities of data points}
 \description{
-  Given a \code{jags} object with model of class \code{BMMmodel} the
+  Given a \code{JAGSrun} object with model of class \code{BMMmodel} the
   aposteriori probabilities are determined. If \code{plot=TRUE}, the
   resulting object of class \code{BMMposteriori} is plotted.
 }
@@ -11,7 +11,7 @@ BMMposteriori(object, class, caption = NULL, plot = TRUE,
               auto.layout = TRUE, ...)
 }
 \arguments{
-  \item{object}{a \code{jags} object with model of class \code{BMMmodel}.}
+  \item{object}{a \code{JAGSrun} object with model of class \code{BMMmodel}.}
   \item{class}{a vector of integers indicating for which classes the
     posterior probabilities shall be plotted. The default is all.}
   \item{caption}{captions to appear above the plots.}
@@ -22,7 +22,7 @@ BMMposteriori(object, class, caption = NULL, plot = TRUE,
     arguments.} 
 }
 \details{
-  Given a \code{jags} object with model of class \code{BMMmodel} the a
+  Given a \code{JAGSrun} object with model of class \code{BMMmodel} the a
   posteriori probabilities are calculated for the unique data points
   with respect to the components specified by \code{class}.
 }

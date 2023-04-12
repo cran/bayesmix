@@ -1,6 +1,6 @@
 \name{JAGScall}
 \alias{JAGScall}
-\title{Calls jags}
+\title{Call jags}
 \description{
   Using functionality from package rjags the JAGS model is created and
   posterior draws are sampled.
@@ -16,7 +16,7 @@ JAGScall(model, y, prefix, control, ...)
   \item{\dots}{additional parameters handed over to \code{BMMmodel}.}
 }
 \value{
-  Returns a \code{"jags"} object.
+  Returns a \code{"JAGSrun"} object.
 }
 \author{Bettina Gruen}
 \seealso{\code{\link{JAGSrun}}}

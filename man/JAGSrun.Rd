@@ -1,7 +1,6 @@
 \name{JAGSrun}
 \alias{JAGSrun}
-\alias{print.jags}
-\alias{jags}
+\alias{print.JAGSrun}
 \title{MCMC sampling of Bayesian models}
 \description{
   Calls jags for MCMC sampling.
@@ -27,10 +26,10 @@ JAGSrun(y, prefix = yname, model = BMMmodel(k = 2),
 This function is a wrapper calling \code{JAGScall}.
 }
 \value{
-  Returns a \code{jags} object with components
+  Returns a \code{JAGSrun} object with components
   \item{call}{the matched call.}
-  \item{results}{results read in from ``jags.out'' if run was successful
-    or from ``jags.dump'' if an error occurred.}
+  \item{results}{MCMC results obtained by calling functionality from
+    package \pkg{rjags}.}
   \item{model}{a \code{JAGSmodel} object.}
   \item{variables}{vector containing the names of the monitored variables.}
   \item{data}{a numeric vector.}

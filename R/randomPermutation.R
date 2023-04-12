@@ -1,6 +1,6 @@
 randomPermutation <- function(x) {
-  if (!(inherits(x, "jags") && inherits(x$model, "BMMmodel"))) 
-    stop("Use only with 'jags' objects with model of class 'BMMmodel'.")
+  if (!(inherits(x, "JAGSrun") && inherits(x$model, "BMMmodel"))) 
+    stop("Use only with 'JAGSrun' objects with model of class 'BMMmodel'.")
   k <- x$model$data$k
   n <- dim(x$results)
   permutedIndex <- as.vector(t(apply(matrix(seq_len(n[1]*k), ncol = k), 1, sample, size = k)))

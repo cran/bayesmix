@@ -1,17 +1,17 @@
-\name{plot.jags}
-\alias{plot.jags}
-\title{Plot jags Object}
+\name{plot.JAGSrun}
+\alias{plot.JAGSrun}
+\title{Plot JAGSrun object}
 \description{
-  Plots \code{mcmc} chains of a \code{jags} object.
+  Plots \code{mcmc} chains of a \code{JAGSrun} object.
 }
 \usage{
-\method{plot}{jags}(x, variables = NULL, trace = TRUE, density = TRUE,
+\method{plot}{JAGSrun}(x, variables = NULL, trace = TRUE, density = TRUE,
      smooth = TRUE, bwf, num, xlim, auto.layout = TRUE,
      ask = interactive(), ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{a \code{jags} object.}
+  \item{x}{a \code{JAGSrun} object.}
   \item{variables}{names of variables which shall be plotted. Default
     are all names of results except those with a column dimension larger
     than the number of classes \code{k}.}
@@ -30,9 +30,9 @@
 \details{
   Adapted from \code{plot.mcmc}.
 
-  Currently only implemented for \code{jags} objects with model of class
+  Currently only implemented for \code{JAGSrun} objects with model of class
   \code{BMMmodel}. Otherwise the default plot method for the \code{results}
-  of the \code{jags} object is called (\code{plot.mcmc}).
+  of the \code{JAGSrun} object is called (\code{plot.mcmc}).
 }
 \author{Bettina Gruen}
 \seealso{\code{\link[coda]{plot.mcmc}}, \code{\link{BMMdiag}},

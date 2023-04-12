@@ -1,6 +1,6 @@
 \name{initsFS}
 \alias{initsFS}
-\title{create initial values}
+\title{Create initial values}
 \description{
   Initial values for nodes are created after the suggestion in Sylvia
   Fruehwirth-Schnatter's book.

@@ -16,35 +16,35 @@ JAGSrun <-  function(y, prefix = yname, model = BMMmodel(k = 2),
       if (!dir.create(tmpdir)) stop("Error creating tmp directory")
     }
     setwd(tmpdir)
+    on.exit(setwd(dir))
   }
   results <- JAGScall(model, y, prefix, control, ...)
   if (cleanup) {
     unlink(paste(prefix, ".bug", sep = ""))
   }
-  if (tmp) setwd(dir)
   z <- list(call = cl, results = results$results, model = results$model,
             variables = results$variables, data = y)
-  class(z) <- "jags"
+  class(z) <- "JAGSrun"
   z
 }
 
-# Print method for jags objects adapted from print.mcmc and
+# Print method for JAGSrun objects adapted from print.mcmc and
 # summary.mcmc in package coda written by Martyn Plummer, Nicky Best,
 # Kate Cowles, Karen Vines
 
-print.jags <- function(x, ...) {
+print.JAGSrun <- function(x, ...) {
   cat("\nCall:\n", deparse(x$call), "\n\n", sep = "")
   if (inherits(x$model, "BMMmodel")) {
     if (is.null(x$results)) cat("No results!\n")
     else {
       cat("Markov Chain Monte Carlo (MCMC) output:\nStart =", stats::start(x$results), 
-          "\nEnd =", stats::end(x$results), "\nThinning interval =", thin(x$results), 
+          "\nEnd =", stats::end(x$results), "\nThinning interval =", coda::thin(x$results), 
           "\n")
       for (i in x$variables) {
         y <- x$results[,grep(paste("^", i, sep = ""), colnames(x$results)), drop = FALSE]
         if(dim(y)[2] <=  x$model$data$k) {
-          yout <- summaryShort.mcmc(y)
-          class(yout) <- "summaryShort.mcmc"
+          yout <- summaryShort_mcmc(y)
+          class(yout) <- "summaryShort_mcmc"
           cat(paste("\n Empirical mean, standard deviation and 95% CI for", i, "\n"))
           print(yout, ...)
         }
@@ -53,12 +53,12 @@ print.jags <- function(x, ...) {
   }
 }
 
-summaryShort.mcmc <- function (object, quantiles = c(0.025, 0.975), 
+summaryShort_mcmc <- function (object, quantiles = c(0.025, 0.975), 
                                ...) {
   x <- methods::as(object, "mcmc")
   statnames <- c("Mean", "SD")
-  varstats <- matrix(nrow = nvar(x), ncol = length(statnames), 
-                     dimnames = list(varnames(x), statnames))
+  varstats <- matrix(nrow = coda::nvar(x), ncol = length(statnames), 
+                     dimnames = list(coda::varnames(x), statnames))
   if (is.matrix(x)) {
     xmean <- apply(x, 2, mean)
     xvar <- apply(x, 2, stats::var)
@@ -74,12 +74,13 @@ summaryShort.mcmc <- function (object, quantiles = c(0.025, 0.975),
   varstats <- drop(varstats)
   varquant <- drop(varquant)
   out <- list(statistics = varstats, quantiles = varquant,
-              start = stats::start(x), end = stats::end(x), thin = thin(x), nchain = 1)
-  class(out) <- "summaryShort.mcmc"
+              start = stats::start(x), end = stats::end(x),
+              thin = coda::thin(x), nchain = 1)
+  class(out) <- "summaryShort_mcmc"
   return(out)
 }
 
-print.summaryShort.mcmc <- function(x, digits = max(3, .Options$digits - 3), ...) {
+print.summaryShort_mcmc <- function(x, digits = max(3, .Options$digits - 3), ...) {
   if (is.matrix(x$statistics)) {
     print(cbind(x$statistics, x$quantiles), digits = digits, ...)
   }

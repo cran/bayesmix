@@ -1,6 +1,6 @@
 \name{BMMdiag}
 \alias{BMMdiag}
-\title{Plot Identifiability Diagnostics for jags Object}
+\title{Plot identifiability diagnostics for JAGSrun object}
 \description{
   Two different plots are currently provided: a plot of different
   variables against each other and a plot of the same variable against
@@ -13,10 +13,10 @@ BMMdiag(object, which = 1:2, variables, ask = interactive(), fct1,
 }
 
 \arguments{
-  \item{object}{a \code{jags} object with model of class \code{BMMmodel}.}
+  \item{object}{a \code{JAGSrun} object with model of class \code{BMMmodel}.}
   \item{which}{if only one of the plots is required, specify its number.}
   \item{variables}{if \code{variables} is missing, the names are taken
-    from the \code{jags} object.}
+    from the \code{JAGSrun} object.}
   \item{ask}{prompt user before each page of plots}
   \item{fct1}{string: name of transformation function for variable on x-axis.}
   \item{fct2}{string: name of transformation function for variable on y-axis.}

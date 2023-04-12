@@ -19,8 +19,8 @@ permutations <- function (n) {
 }
 
 Sort <- function(x, by = NULL) {
-  if (!(inherits(x, "jags") && inherits(x$model, "BMMmodel"))) 
-    stop("Use only with 'jags' objects with model of class 'BMMmodel'.")
+  if (!(inherits(x, "JAGSrun") && inherits(x$model, "BMMmodel"))) 
+    stop("Use only with 'JAGSrun' objects with model of class 'BMMmodel'.")
   x.old <- x
   n <- dim(x$results)
   if (is.null(by)) by <- x$variables

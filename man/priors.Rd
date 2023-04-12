@@ -2,7 +2,7 @@
 \alias{priorsFish}
 \alias{priorsRaftery}
 \alias{priorsUncertain}
-\title{Creates list of prior specifications}
+\title{Create list of prior specifications}
 \description{Given the data values for the priors are determined.
 }
 \usage{

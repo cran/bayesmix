@@ -1,5 +1,16 @@
 \name{NEWS}
 \title{News for Package 'bayesmix'}
+\section{Changes in bayesmix version 0.7-6}{
+  \itemize{
+    \item Changed class `\code{jags}` returned by \code{JAGSrun()} to
+    `\code{JAGSrun}` to avoid a conflict with the class of the same name
+    from package \pkg{rjags}. 
+    \item Registered S3 methods for exported generic \code{JAGScall()} and
+    generic \code{print()}.
+    \item Change names of internal function containing a dot to use an
+    underscore to avoid confusion with S3 method.
+  }
+}
 \section{Changes in bayesmix version 0.7-5}{
   \itemize{
     \item Maintainer e-mail changed.

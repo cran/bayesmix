@@ -1,6 +1,6 @@
 \name{BMMpriors}
 \alias{BMMpriors}
-\title{Creates a 'BMMpriors' object}
+\title{Create a 'BMMpriors' object}
 \description{This function enables a comfortable creation of
   \code{BMMpriors} objects, which can be used for specifying the priors 
   of a \code{BMMmodel}.

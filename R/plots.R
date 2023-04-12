@@ -1,7 +1,7 @@
 BMMdiag <- function(object, which = 1:2, variables, ask = interactive(), fct1, fct2, 
                     xlim, ylim, auto.layout = TRUE, caption = NULL, main = "", ...) {  
-  if (!(inherits(object, "jags") && inherits(object$model, "BMMmodel"))) 
-    stop("Use only with 'jags' objects with model of class 'BMMmodel'.")
+  if (!(inherits(object, "JAGSrun") && inherits(object$model, "BMMmodel"))) 
+    stop("Use only with 'JAGSrun' objects with model of class 'BMMmodel'.")
   if (!is.numeric(which) || any(which < 1) || any(which > 2)) 
     stop("`which' must be in 1:2")
   k <- object$model$data$k
@@ -78,8 +78,8 @@ BMMdiag <- function(object, which = 1:2, variables, ask = interactive(), fct1, f
 }
 
 BMMposteriori <- function(object, class, caption = NULL, plot = TRUE, auto.layout = TRUE, ...) {
-  if (!(inherits(object, "jags") && inherits(object$model, "BMMmodel"))) 
-    stop("Use only with 'jags' objects with model of class 'BMMmodel'.")
+  if (!(inherits(object, "JAGSrun") && inherits(object$model, "BMMmodel"))) 
+    stop("Use only with 'JAGSrun' objects with model of class 'BMMmodel'.")
   k <- object$model$data$k
   if (missing(class)) class <- seq_len(k)
   if (is.null(caption)) caption <- paste("Group", class)
@@ -114,10 +114,10 @@ plot.BMMposteriori <- function(x, caption, main = "", ...) {
   }
 }
 
-# Plot method for jags objects adapted from plot.mcmc in package coda
+# Plot method for JAGSrun objects adapted from plot.mcmc in package coda
 # written by Martyn Plummer, Nicky Best, Kate Cowles, Karen Vines
 
-set.mfrow <- function (Nchains = 1, Nparms = 1, nplots = 1, sepplot = FALSE) 
+set_mfrow <- function (Nchains = 1, Nparms = 1, nplots = 1, sepplot = FALSE) 
 {
     mfrow <- if (sepplot && Nchains > 1 && nplots == 1) {
         if (Nchains == 2) {
@@ -155,8 +155,9 @@ set.mfrow <- function (Nchains = 1, Nparms = 1, nplots = 1, sepplot = FALSE)
     return(mfrow)
 }
 
-plot.jags <- function (x, variables = NULL, trace = TRUE, density = TRUE, 
-                       smooth = TRUE, bwf, num, xlim, auto.layout = TRUE, ask = interactive(), ...)  
+plot.JAGSrun <- function (x, variables = NULL, trace = TRUE, density = TRUE, 
+                          smooth = TRUE, bwf, num, xlim, auto.layout = TRUE,
+                          ask = interactive(), ...)  
 {
   if (inherits(x$model, "BMMmodel")) {
     if (is.null(variables)) {
@@ -174,21 +175,21 @@ plot.jags <- function (x, variables = NULL, trace = TRUE, density = TRUE,
         oldpar <- NULL
         on.exit(graphics::par(oldpar))
         if (auto.layout) {
-          mfrow <- set.mfrow(Nchains = nchain(u), Nparms = nvar(u), 
+          mfrow <- set_mfrow(Nchains = coda::nchain(u), Nparms = coda::nvar(u), 
                              nplots = trace + density)
           oldpar <- graphics::par(mfrow = mfrow)
         }
         oldpar <- c(oldpar, graphics::par(ask = ask))
-        for (i in seq_len(nvar(u))) {
-          y <- mcmc(as.matrix(u)[, i, drop = FALSE], stats::start(u), stats::end(u), thin(u))
+        for (i in seq_len(coda::nvar(u))) {
+          y <- coda::mcmc(as.matrix(u)[, i, drop = FALSE], stats::start(u), stats::end(u), coda::thin(u))
           if (trace) 
-            traceplot(y, smooth = smooth)
+            coda::traceplot(y, smooth = smooth)
           if (density) {
             if (missing(xlim)) xl <- range(u)
             else xl <- xlim
             if (missing(bwf)) 
-              densplot(y, xlim = xl, ...)
-            else densplot(y, bwf = bwf, xlim = xl, ...)
+              coda::densplot(y, xlim = xl, ...)
+            else coda::densplot(y, bwf = bwf, xlim = xl, ...)
           }
         }
       }
